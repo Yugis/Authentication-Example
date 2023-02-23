@@ -4,6 +4,7 @@ namespace App\Exceptions;
 
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -55,8 +56,13 @@ class Handler extends ExceptionHandler
 
         if ($e instanceof \Illuminate\Validation\ValidationException) {
             return response()->failure(
-                errorMessage: [...$e->validator->errors()->toArray()]
+                errorMessage: [...$e->validator->errors()->toArray()],
+                statusCode: 401
             );
+        }
+
+        if ($e instanceof HttpException) {
+            return response()->notFound();
         }
 
         return parent::render($request, $e);

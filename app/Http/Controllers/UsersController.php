@@ -7,6 +7,7 @@ use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules;
 
 class UsersController extends Controller
@@ -39,30 +40,30 @@ class UsersController extends Controller
             : response()->failure(statusCode: 500);
     }
 
-    public function show(User $task): JsonResponse
+    public function show(User $user): JsonResponse
     {
-        return response()->success(data: $task);
+        return response()->success(data: $user, message: 'User Fetched.');
     }
 
-    public function update(User $task, Request $request)
+    public function update(User $user, Request $request)
     {
         $validated = $request->validate([
-            'description' => ['max:255'],
-            'deadline' => ['date'],
-            'department_id' => ['exists:departments,id']
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
+            'department_id' => ['required', 'exists:departments,id']
         ]);
 
-        $task->update($validated);
+        $user->update($validated);
 
-        return $task ?
-            response()->success(data: $task)
+        return $user ?
+            response()->success(data: $user, message: 'User updated.')
             : response()->failure(statusCode: 500);
     }
 
-    public function destroy(User $task): JsonResponse
+    public function destroy(User $user): JsonResponse
     {
-        $task->delete();
+        $user->delete();
 
-        return response()->success(message: 'Task Deleted.');
+        return response()->success(message: 'User Deleted.');
     }
 }

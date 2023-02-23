@@ -2,13 +2,14 @@
 
 namespace App\Models;
 
+use App\Models\Traits\DepartmentManagement;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Task extends Model
 {
-    use HasFactory;
+    use HasFactory, DepartmentManagement;
 
     protected $guarded = [];
 
@@ -19,15 +20,5 @@ class Task extends Model
     public function department(): BelongsTo
     {
         return $this->belongsTo(Department::class);
-    }
-
-    public function assignToDepartment($department_id): bool
-    {
-        return $this->update(['department_id' => $department_id]);
-    }
-
-    public function revokeTaskAccess(): bool
-    {
-        return $this->update(['department_id' => null]);
     }
 }
