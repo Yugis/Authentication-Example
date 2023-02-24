@@ -17,7 +17,7 @@ class TasksController extends Controller
             );
         }
 
-        return response()->success(data: Task::latest('id')->get(), message: 'Tasks Fetched.');
+        return response()->success(data: Task::latest('id')->get(), message: 'Tasks Fetched');
     }
 
     public function store(Request $request): JsonResponse
@@ -30,13 +30,13 @@ class TasksController extends Controller
         $task = Task::create($validated);
 
         return $task ?
-            response()->success(data: $task, message: 'Task Fetched.')
+            response()->success(data: $task, message: 'Task Created')
             : response()->failure(statusCode: 500);
     }
 
     public function show(Task $task): JsonResponse
     {
-        return response()->success(data: $task);
+        return response()->success(data: $task, message: 'Task Fetched');
     }
 
     public function update(Task $task, Request $request): JsonResponse
@@ -50,7 +50,7 @@ class TasksController extends Controller
         $task->update($validated);
 
         return $task ?
-            response()->success(data: $task)
+            response()->success(data: $task, message: 'Task Updated')
             : response()->failure(statusCode: 500);
     }
 
@@ -58,6 +58,6 @@ class TasksController extends Controller
     {
         $task->delete();
 
-        return response()->success(message: 'Task Deleted.');
+        return response()->success(message: 'Task Deleted');
     }
 }

@@ -14,7 +14,7 @@ class UsersController extends Controller
 {
     public function index(): JsonResponse
     {
-        return response()->success(data: User::latest('id')->get());
+        return response()->success(data: User::latest('id')->get(), message: 'Users Fetched');
     }
 
     public function store(Request $request): JsonResponse
@@ -36,13 +36,13 @@ class UsersController extends Controller
         event(new Registered($user));
 
         return $user ?
-            response()->success(data: $user, message: 'User Created!')
+            response()->success(data: $user, message: 'User Created')
             : response()->failure(statusCode: 500);
     }
 
     public function show(User $user): JsonResponse
     {
-        return response()->success(data: $user, message: 'User Fetched.');
+        return response()->success(data: $user, message: 'User Fetched');
     }
 
     public function update(User $user, Request $request)
@@ -56,7 +56,7 @@ class UsersController extends Controller
         $user->update($validated);
 
         return $user ?
-            response()->success(data: $user, message: 'User updated.')
+            response()->success(data: $user, message: 'User updated')
             : response()->failure(statusCode: 500);
     }
 
@@ -64,6 +64,6 @@ class UsersController extends Controller
     {
         $user->delete();
 
-        return response()->success(message: 'User Deleted.');
+        return response()->success(message: 'User Deleted');
     }
 }

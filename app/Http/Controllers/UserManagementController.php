@@ -16,6 +16,6 @@ class UserManagementController extends Controller
 
         $user->assignToDepartment($request->department_id);
 
-        return response()->success(data: $user, statusCode: 201, message: 'User assigned to department.');
+        return response()->success(data: $user, statusCode: 201, message: 'User assigned to department');
     }
 }
