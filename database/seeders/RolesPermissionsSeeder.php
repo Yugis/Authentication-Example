@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
@@ -14,14 +13,15 @@ class RolesPermissionsSeeder extends Seeder
      */
     public function run(): void
     {
+        Role::create(['name' => 'super admin']);
+        $employeeRole = Role::create(['name' => 'employee']);
         $adminRole = Role::create(['name' => 'admin']);
-        $subAdminRole = Role::create(['name' => 'sub_admin']);
-        Role::create(['name' => 'employee']);
 
         $tasksCrudPermissions[] = Permission::create(['name' => 'create task']);
         $tasksCrudPermissions[] = Permission::create(['name' => 'read task']);
         $tasksUpdatePermissions[] = Permission::create(['name' => 'update task']);
         $tasksCrudPermissions[] = Permission::create(['name' => 'delete task']);
+        $updateTaskStatusPermission[] = Permission::create(['name' => 'update task status']);
 
         $assignTaskPermission = Permission::create(['name' => 'assign task']);
         $revokeTaskPermission = Permission::create(['name' => 'revoke task']);
@@ -33,17 +33,16 @@ class RolesPermissionsSeeder extends Seeder
 
 
         $adminRole->syncPermissions([
-            $tasksCrudPermissions,
+            $tasksUpdatePermissions,
             $assignTaskPermission,
             $revokeTaskPermission,
-            $tasksUpdatePermissions,
-            ...$usersCrudPermissions,
+            $updateTaskStatusPermission
         ]);
 
-        $subAdminRole->syncPermissions([
+        $employeeRole->syncPermissions([
+            $tasksCrudPermissions,
             $tasksUpdatePermissions,
-            $assignTaskPermission,
-            $revokeTaskPermission
+            $updateTaskStatusPermission
         ]);
     }
 }

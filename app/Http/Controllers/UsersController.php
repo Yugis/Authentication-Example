@@ -14,7 +14,7 @@ class UsersController extends Controller
 {
     public function index(): JsonResponse
     {
-        return response()->success(data: User::get());
+        return response()->success(data: User::latest('id')->get());
     }
 
     public function store(Request $request): JsonResponse

@@ -2,8 +2,10 @@
 
 namespace App\Exceptions;
 
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Validation\UnauthorizedException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Throwable;
 
@@ -62,7 +64,28 @@ class Handler extends ExceptionHandler
         }
 
         if ($e instanceof HttpException) {
+            if ($e->getStatusCode() === 403) {
+                return response()->failure(
+                    statusCode: 403,
+                    errorMessage: 'Forbidden! User does not have authority over this resource.'
+                );
+            }
+
             return response()->notFound();
+        }
+
+        if ($e instanceof AuthenticationException) {
+            return response()->failure(
+                statusCode: 401,
+                errorMessage: 'Unauthenticated User.'
+            );
+        }
+
+        if ($e instanceof UnauthorizedException) {
+            return response()->failure(
+                statusCode: 403,
+                errorMessage: 'Forbidden! does not have authority over this resource.'
+            );
         }
 
         return parent::render($request, $e);

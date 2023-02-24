@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Task;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class TasksManagementController extends Controller
 {
@@ -21,6 +22,10 @@ class TasksManagementController extends Controller
 
     public function update(Task $task, Request $request): JsonResponse
     {
+        if ($task->department_id !== $request->user()->department_id) {
+            throw new NotFoundHttpException();
+        }
+
         $request->validate([
             'status' => ['required', 'boolean']
         ]);

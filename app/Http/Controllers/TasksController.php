@@ -10,7 +10,14 @@ class TasksController extends Controller
 {
     public function index(): JsonResponse
     {
-        return response()->success(data: Task::get(), message: 'Tasks Fetched.');
+        if (auth()->user()->hasRole('employee')) {
+            return response()->success(
+                data: Task::employee(auth()->user()->department_id)->latest('id')->get(),
+                message: 'Tasks Fetched.'
+            );
+        }
+
+        return response()->success(data: Task::latest('id')->get(), message: 'Tasks Fetched.');
     }
 
     public function store(Request $request): JsonResponse
